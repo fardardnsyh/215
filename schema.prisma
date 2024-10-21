@@ -1,0 +1,40 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Project {
+  id        String     @default(cuid()) @id
+  title     String
+  content   String?
+  preview   String?
+  demoUrl   String? @map("demo_url")
+  published Boolean @default(false)
+  stacks    Stack[]
+  @@map(name: "projects")
+}
+
+model Stack {
+  id            String       @default(cuid()) @id
+  name          String
+  projects      Project[]
+  @@map(name: "stacks")
+}
+
+model Experience {
+  id        String     @default(cuid()) @id
+  company   String
+  job       String
+  startDate DateTime?  @map("start_date")
+  endDate   DateTime?  @map("end_date")
+  content   String?
+  published Boolean @default(false)
+  @@map(name: "experiences")
+}
